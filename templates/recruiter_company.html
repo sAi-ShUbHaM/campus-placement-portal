@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Company Profile - Campus Placement Portal</title>
+
+
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+      
+
+    <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+
+
+</head>
+
+<body>
+
+<div class="page-container">
+
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+<header class="dashboard-header">
+
+    <div>
+        <h1>Campus<span class="brand-dot">.</span></h1>
+        <p>Recruiter Portal</p>
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            type="button"
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Switch theme"
+            title="Switch theme"
+        >
+            <span class="theme-icon" aria-hidden="true">☾</span>
+        </button>
+
+        <a href="{{ url_for('auth.logout') }}">
+            <button>Logout</button>
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ========================= -->
+<!-- PAGE CONTENT -->
+<!-- ========================= -->
+
+<main class="company-profile-page">
+
+    <div class="company-profile-heading">
+
+        <span class="page-kicker">
+            RECRUITER PORTAL
+        </span>
+
+        <h2>
+            Company profile
+        </h2>
+
+        <p>
+            Tell the placement cell about your company.
+            These details will be reviewed before you can
+            post opportunities.
+        </p>
+
+    </div>
+
+
+    <div class="company-profile-layout">
+
+        <!-- ========================= -->
+        <!-- INFO PANEL -->
+        <!-- ========================= -->
+
+        <aside class="company-info-panel">
+
+            <span class="page-kicker">
+                PROFILE
+            </span>
+
+            <h3>
+                Build your company presence.
+            </h3>
+
+            <p>
+                Keep your company information clear and
+                professional so students can understand
+                who they are applying to.
+            </p>
+
+            <div class="company-info-list">
+
+                <div class="company-info-item">
+
+                    <span class="info-number">
+                        01
+                    </span>
+
+                    <div>
+                        <strong>
+                            Company identity
+                        </strong>
+
+                        <p>
+                            Use your official company name.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="company-info-item">
+
+                    <span class="info-number">
+                        02
+                    </span>
+
+                    <div>
+                        <strong>
+                            Description
+                        </strong>
+
+                        <p>
+                            Give students a short overview
+                            of your organization.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="company-info-item">
+
+                    <span class="info-number">
+                        03
+                    </span>
+
+                    <div>
+                        <strong>
+                            Website
+                        </strong>
+
+                        <p>
+                            Add your official website
+                            for verification.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ========================= -->
+        <!-- FORM -->
+        <!-- ========================= -->
+
+        <section class="company-form-card">
+
+            <div class="company-form-header">
+
+                <div>
+
+                    <span class="page-kicker">
+                        COMPANY DETAILS
+                    </span>
+
+                    <h3>
+                        {% if company %}
+                            Edit your profile
+                        {% else %}
+                            Create your profile
+                        {% endif %}
+                    </h3>
+
+                </div>
+
+                {% if company %}
+
+                <span class="profile-edit-badge">
+                    EDITING
+                </span>
+
+                {% else %}
+
+                <span class="profile-edit-badge">
+                    NEW
+                </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <form method="POST" class="company-profile-form">
+
+                <div class="company-form-field">
+
+                    <label for="company_name">
+                        Company Name
+                    </label>
+
+                    <span class="field-hint">
+                        Official registered company name
+                    </span>
+
+                    <input
+                        type="text"
+                        id="company_name"
+                        name="company_name"
+                        value="{{ company['company_name'] if company else '' }}"
+                        placeholder="e.g. Google India"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="company-form-field">
+
+                    <label for="description">
+                        Company Description
+                    </label>
+
+                    <span class="field-hint">
+                        A short description students will understand
+                    </span>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="7"
+                        placeholder="Tell students about your company, products, culture, or areas of work..."
+                    >{{ company['description'] if company else '' }}</textarea>
+
+                </div>
+
+
+                <div class="company-form-field">
+
+                    <label for="website">
+                        Company Website
+                    </label>
+
+                    <span class="field-hint">
+                        Official company website
+                    </span>
+
+                    <input
+                        type="text"
+                        id="website"
+                        name="website"
+                        value="{{ company['website'] if company else '' }}"
+                        placeholder="https://example.com"
+                    >
+
+                </div>
+
+
+                <div class="company-form-actions">
+
+                    <a
+                        href="{{ url_for('recruiter.recruiter_dashboard') }}"
+                        class="form-cancel-link"
+                    >
+                        Cancel
+                    </a>
+
+                    <button type="submit">
+                        {% if company %}
+                            Save Changes
+                        {% else %}
+                            Create Company Profile
+                        {% endif %}
+
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <div class="company-form-note">
+
+                <span>ⓘ</span>
+
+                <p>
+                    Your company profile must be approved by
+                    the placement cell before job postings
+                    become available.
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<footer class="dashboard-footer">
+    Campus Placement Portal · Recruiter
+</footer>
+
+</div>
+
+</body>
+
+</html>

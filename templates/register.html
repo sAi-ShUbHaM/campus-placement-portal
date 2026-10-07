@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Register - Campus Placement Portal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+</head>
+
+<body>
+
+    <div class="auth-page">
+
+        <div class="auth-background" aria-hidden="true"></div>
+
+        <button
+            type="button"
+            class="theme-toggle standalone-theme-toggle"
+            data-theme-toggle
+            aria-label="Switch to dark mode"
+            title="Switch to dark mode"
+        >
+            <span class="theme-icon" aria-hidden="true">☾</span>
+            <span class="sr-only">Toggle theme</span>
+        </button>
+
+
+        <main class="auth-layout">
+
+            <section class="auth-brand">
+
+                <a href="{{ url_for('home') }}" class="auth-brand-link">
+                    CAMPUS<span>.</span>
+                </a>
+
+                <div class="auth-brand-content">
+
+                    <div class="home-eyebrow">
+                        <span class="eyebrow-dot"></span>
+                        JOIN THE PORTAL
+                    </div>
+
+                    <h1>
+                        Start your
+                        <br>
+                        placement journey.
+                    </h1>
+
+                    <p>
+                        Create your account and get access to approved
+                        opportunities matched to your eligibility.
+                    </p>
+
+                </div>
+
+                <div class="auth-brand-footer">
+                    <span>STUDENTS</span>
+                    <span>RECRUITERS</span>
+                    <span>PLACEMENT CELL</span>
+                </div>
+
+            </section>
+
+
+            <section class="auth-form-section">
+
+                <div class="auth-card modern-auth-card">
+
+                    <div class="auth-form-heading">
+
+                        <span class="form-kicker">
+                            GET STARTED
+                        </span>
+
+                        <h2>Create account</h2>
+
+                        <p>
+                            Register to access the placement portal.
+                        </p>
+
+                    </div>
+
+
+                    <form method="POST" action="/register">
+
+                        <label for="name">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            required
+                        >
+
+
+                        <label for="email">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            required
+                        >
+
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            required
+                        >
+
+
+                        <label for="phone">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="phone"
+                            name="phone"
+                            placeholder="Enter your phone number"
+                            autocomplete="tel"
+                            required
+                        >
+
+
+                        <label for="role">
+                            Register As
+                        </label>
+
+                        <select
+                            id="role"
+                            name="role"
+                            required
+                        >
+                            <option value="student">
+                                Student
+                            </option>
+
+                            <option value="recruiter">
+                                Recruiter
+                            </option>
+                        </select>
+
+
+                        <button
+                            type="submit"
+                            class="auth-submit"
+                        >
+                            Create account
+                            <span>→</span>
+                        </button>
+
+                    </form>
+
+
+                    <div class="auth-divider">
+                        <span>ALREADY REGISTERED?</span>
+                    </div>
+
+
+                    <a
+                        href="{{ url_for('auth.login') }}"
+                        class="auth-secondary-link"
+                    >
+                        Sign in instead
+                        <span>↗</span>
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('home') }}"
+                        class="auth-back-link"
+                    >
+                        ← Back to home
+                    </a>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

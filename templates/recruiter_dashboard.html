@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Recruiter Dashboard - Campus Placement Portal</title>
+
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+      
+
+<script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+
+
+</head>
+
+
+<body>
+
+<div class="page-container">
+
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+<header class="dashboard-header">
+
+    <div>
+        <h1>Campus<span class="brand-dot">.</span></h1>
+        <p>Recruiter Dashboard</p>
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            type="button"
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Switch theme"
+            title="Switch theme"
+        >
+            <span class="theme-icon" aria-hidden="true">☾</span>
+        </button>
+
+        <a href="{{ url_for('auth.logout') }}">
+            <button>Logout</button>
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ========================= -->
+<!-- WELCOME -->
+<!-- ========================= -->
+
+<section class="recruiter-welcome">
+
+    <span class="page-kicker">
+        RECRUITER PORTAL
+    </span>
+
+    <h2>
+        Welcome,
+        {{ recruiter["name"] }}.
+    </h2>
+
+    <p>
+        Manage your company profile, create opportunities,
+        and connect with eligible candidates.
+    </p>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- COMPANY PROFILE -->
+<!-- ========================= -->
+
+<section class="dashboard-section">
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="page-kicker">
+                COMPANY
+            </span>
+
+            <h2>Your company</h2>
+
+        </div>
+
+        {% if company %}
+
+        <a href="{{ url_for('recruiter.recruiter_company') }}">
+            <button class="outline-button">
+                Edit Profile
+            </button>
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+    {% if company %}
+
+    <div class="recruiter-company-card">
+
+        <div class="company-main">
+
+            <span class="company-label">
+                COMPANY NAME
+            </span>
+
+            <h3>
+                {{ company["company_name"] }}
+            </h3>
+
+            {% if company["description"] %}
+
+            <p>
+                {{ company["description"] }}
+            </p>
+
+            {% else %}
+
+            <p class="muted-value">
+                No company description provided.
+            </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="company-meta">
+
+            <div class="company-meta-item">
+
+                <span>
+                    WEBSITE
+                </span>
+
+                {% if company["website"] %}
+
+                <a
+                    href="{{ company['website'] }}"
+                    target="_blank"
+                >
+                    Visit Website ↗
+                </a>
+
+                {% else %}
+
+                <strong class="muted-value">
+                    Not provided
+                </strong>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="company-meta-item">
+
+                <span>
+                    APPROVAL STATUS
+                </span>
+
+                <strong>
+
+                    <span class="recruiter-status
+                        {% if company['approval_status'] == 'APPROVED' %}
+                            recruiter-status-approved
+                        {% elif company['approval_status'] == 'REJECTED' %}
+                            recruiter-status-rejected
+                        {% else %}
+                            recruiter-status-pending
+                        {% endif %}
+                    ">
+                        {{ company["approval_status"] }}
+                    </span>
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% if company["approval_status"] == "APPROVED" %}
+
+    <div class="recruiter-approved-banner">
+
+        <div>
+
+            <span class="page-kicker">
+                COMPANY VERIFIED
+            </span>
+
+            <h3>
+                You're ready to post opportunities.
+            </h3>
+
+            <p>
+                Create a job posting and start finding
+                eligible candidates.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('recruiter.create_job') }}">
+            <button>
+                Create Job Posting →
+            </button>
+        </a>
+
+    </div>
+
+    {% else %}
+
+    <div class="recruiter-pending-banner">
+
+        <div class="pending-icon">
+            …
+        </div>
+
+        <div>
+
+            <span class="page-kicker">
+                AWAITING APPROVAL
+            </span>
+
+            <h3>
+                Your company profile is under review.
+            </h3>
+
+            <p>
+                You can create job postings once the
+                placement cell approves your company.
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    {% else %}
+
+    <div class="recruiter-empty-company">
+
+        <div>
+
+            <span class="page-kicker">
+                ACTION REQUIRED
+            </span>
+
+            <h3>
+                Create your company profile
+            </h3>
+
+            <p>
+                Add your company details before posting
+                placement opportunities.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('recruiter.recruiter_company') }}">
+            <button>
+                Create Company Profile →
+            </button>
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- ========================= -->
+<!-- JOB POSTINGS -->
+<!-- ========================= -->
+
+<section class="dashboard-section">
+
+    <div class="section-heading stacked-heading">
+
+        <div>
+
+            <span class="page-kicker">
+                OPPORTUNITIES
+            </span>
+
+            <h2>Your job postings</h2>
+
+            <p>
+                Manage your opportunities and view applicants.
+            </p>
+
+        </div>
+
+        {% if company and company["approval_status"] == "APPROVED" %}
+
+        <a href="{{ url_for('recruiter.create_job') }}">
+            <button class="outline-button">
+                + New Job
+            </button>
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+    {% if jobs %}
+
+    <div class="recruiter-job-grid">
+
+        {% for job in jobs %}
+
+        <article class="recruiter-job-card">
+
+            <div class="recruiter-job-top">
+
+                <div>
+
+                    <span class="job-company">
+                        {{ company["company_name"] }}
+                    </span>
+
+                    <h3>
+                        {{ job["title"] }}
+                    </h3>
+
+                </div>
+
+                <span class="recruiter-status
+                    {% if job['approval_status'] == 'APPROVED' %}
+                        recruiter-status-approved
+                    {% elif job['approval_status'] == 'REJECTED' %}
+                        recruiter-status-rejected
+                    {% else %}
+                        recruiter-status-pending
+                    {% endif %}
+                ">
+                    {{ job["approval_status"] }}
+                </span>
+
+            </div>
+
+
+            {% if job["description"] %}
+
+            <p class="recruiter-job-description">
+                {{ job["description"] }}
+            </p>
+
+            {% else %}
+
+            <p class="recruiter-job-description muted-value">
+                No description provided.
+            </p>
+
+            {% endif %}
+
+
+            <div class="recruiter-job-requirements">
+
+                <div>
+
+                    <span>
+                        MIN CGPA
+                    </span>
+
+                    <strong>
+                        {{ job["minimum_cgpa"] }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        DEPARTMENTS
+                    </span>
+
+                    <strong>
+                        {{ job["allowed_departments"] }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        GRADUATION
+                    </span>
+
+                    <strong>
+                        {{ job["graduation_year"] }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="recruiter-job-footer">
+
+                <span class="recruiter-job-id">
+                    JOB #{{ job["id"] }}
+                </span>
+
+                <a
+                    href="{{ url_for('recruiter.job_candidates', job_id=job['id']) }}"
+                >
+                    <button class="recruiter-candidates-button">
+                        View Candidates
+                        <span>→</span>
+                    </button>
+                </a>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+
+    {% else %}
+
+    <div class="recruiter-empty-jobs">
+
+        <span class="empty-icon">
+            —
+        </span>
+
+        <span class="page-kicker">
+            NO POSTINGS
+        </span>
+
+        <h3>
+            No job opportunities yet
+        </h3>
+
+        <p>
+            Create your first job posting to start
+            receiving applications.
+        </p>
+
+        {% if company and company["approval_status"] == "APPROVED" %}
+
+        <a href="{{ url_for('recruiter.create_job') }}">
+            <button>
+                Create Your First Job →
+            </button>
+        </a>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- ========================= -->
+<!-- FOOTER -->
+<!-- ========================= -->
+
+<footer class="dashboard-footer">
+    Campus Placement Portal · Recruiter
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

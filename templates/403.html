@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Access Denied - Campus Placement Portal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+
+</head>
+
+<body>
+
+<div class="error-page">
+
+    <button
+        type="button"
+        class="theme-toggle standalone-theme-toggle"
+        data-theme-toggle
+        aria-label="Switch theme"
+        title="Switch theme"
+    >
+        <span class="theme-icon" aria-hidden="true">☾</span>
+    </button>
+
+    <div class="error-grid" aria-hidden="true"></div>
+
+    <main class="error-content">
+
+        <span class="error-code">
+            403
+        </span>
+
+        <span class="page-kicker">
+            ACCESS RESTRICTED
+        </span>
+
+        <h1>
+            You don't have
+            <br>
+            permission.
+        </h1>
+
+        <p>
+            This area of the Campus Placement Portal is restricted
+            to authorized users. Your account does not have access
+            to this page.
+        </p>
+
+        <div class="error-actions">
+
+            <a href="{{ url_for('home') }}">
+                <button class="home-primary-button">
+                    Back to Home
+                    <span>→</span>
+                </button>
+            </a>
+
+            <a href="{{ url_for('auth.logout') }}">
+                <button class="home-secondary-button">
+                    Logout
+                </button>
+            </a>
+
+        </div>
+
+        <div class="error-status">
+
+            <span class="status-dot"></span>
+
+            <span>
+                Security check active
+            </span>
+
+        </div>
+
+    </main>
+
+    <footer class="error-footer">
+
+        <span>
+            CAMPUS PLACEMENT SYSTEM
+        </span>
+
+        <span>
+            AUTHORIZED ACCESS ONLY
+        </span>
+
+    </footer>
+
+</div>
+
+</body>
+
+</html>
+

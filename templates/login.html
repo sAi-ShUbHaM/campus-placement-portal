@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login - Campus Placement Portal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+</head>
+
+<body>
+
+    <div class="auth-page">
+
+        <div class="auth-background" aria-hidden="true"></div>
+
+        <button
+            type="button"
+            class="theme-toggle standalone-theme-toggle"
+            data-theme-toggle
+            aria-label="Switch to dark mode"
+            title="Switch to dark mode"
+        >
+            <span class="theme-icon" aria-hidden="true">☾</span>
+            <span class="sr-only">Toggle theme</span>
+        </button>
+
+
+        <main class="auth-layout">
+
+            <section class="auth-brand">
+
+                <a href="{{ url_for('home') }}" class="auth-brand-link">
+                    CAMPUS<span>.</span>
+                </a>
+
+                <div class="auth-brand-content">
+
+                    <div class="home-eyebrow">
+                        <span class="eyebrow-dot"></span>
+                        PLACEMENT PORTAL
+                    </div>
+
+                    <h1>
+                        One portal.
+                        <br>
+                        Every opportunity.
+                    </h1>
+
+                    <p>
+                        Connect with recruiters, discover opportunities,
+                        and track your placement journey from one place.
+                    </p>
+
+                </div>
+
+                <div class="auth-brand-footer">
+                    <span>STUDENTS</span>
+                    <span>RECRUITERS</span>
+                    <span>PLACEMENT CELL</span>
+                </div>
+
+            </section>
+
+
+            <section class="auth-form-section">
+
+                <div class="auth-card modern-auth-card">
+
+                    <div class="auth-form-heading">
+
+                        <span class="form-kicker">
+                            WELCOME BACK
+                        </span>
+
+                        <h2>Sign in</h2>
+
+                        <p>
+                            Enter your credentials to continue.
+                        </p>
+
+                    </div>
+
+
+                    <form method="POST" action="/login">
+
+                        <label for="email">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            required
+                        >
+
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+
+                        <button
+                            type="submit"
+                            class="auth-submit"
+                        >
+                            Sign in
+                            <span>→</span>
+                        </button>
+
+                    </form>
+
+
+                    <div class="auth-divider">
+                        <span>NEW HERE?</span>
+                    </div>
+
+
+                    <a
+                        href="{{ url_for('auth.register') }}"
+                        class="auth-secondary-link"
+                    >
+                        Create an account
+                        <span>↗</span>
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('home') }}"
+                        class="auth-back-link"
+                    >
+                        ← Back to home
+                    </a>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>
+

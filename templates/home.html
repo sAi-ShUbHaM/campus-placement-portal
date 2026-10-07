@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Campus Placement Portal</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+</head>
+
+<body>
+
+    <div class="home-page">
+
+        <!-- Theme toggle -->
+        <button type="button" class="theme-toggle standalone-theme-toggle" data-theme-toggle
+            aria-label="Switch to dark mode" title="Switch to dark mode">
+            <span class="theme-icon" aria-hidden="true">☾</span>
+            <span class="sr-only">Toggle theme</span>
+        </button>
+
+
+        <!-- Background grid -->
+        <div class="home-grid" aria-hidden="true"></div>
+
+
+        <main class="home-content">
+
+            <!-- Small label -->
+            <div class="home-eyebrow">
+                <span class="eyebrow-dot"></span>
+                CAMPUS PLACEMENT SYSTEM
+            </div>
+
+
+            <!-- Main heading -->
+            <h1 class="home-title">
+                Your campus.
+                <br>
+
+                <span class="typing-wrapper">
+                    Your <span id="typing-text"></span><span class="typing-cursor">|</span>
+                </span>
+            </h1>
+
+
+            <!-- Description -->
+            <p class="home-description">
+                A centralized platform connecting students,
+                recruiters, and placement administrators
+                in one simple workflow.
+            </p>
+
+
+            <!-- Buttons -->
+            <div class="home-buttons">
+
+                <a href="{{ url_for('auth.login') }}">
+                    <button class="home-primary-button">
+                        Login
+                        <span>→</span>
+                    </button>
+                </a>
+
+                <a href="{{ url_for('auth.register') }}">
+                    <button class="home-secondary-button">
+                        Create Account
+                    </button>
+                </a>
+
+            </div>
+
+
+            <!-- Small system indicator -->
+            <div class="home-status">
+                <span class="status-dot"></span>
+                <span>Placement portal online</span>
+            </div>
+
+        </main>
+
+
+        <!-- Bottom information -->
+        <div class="home-footer">
+            <span>STUDENTS</span>
+            <span>RECRUITERS</span>
+            <span>PLACEMENT CELL</span>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const words = [
+            "opportunities.",
+            "career.",
+            "future."
+        ];
+
+        const typingElement = document.getElementById("typing-text");
+
+        let wordIndex = 0;
+        let characterIndex = 0;
+        let deleting = false;
+
+        const typingSpeed = 95;
+        const deletingSpeed = 55;
+        const pauseAfterTyping = 1600;
+        const pauseAfterDeleting = 400;
+
+
+        function typeAnimation() {
+
+            const currentWord = words[wordIndex];
+
+            if (!deleting) {
+
+                typingElement.textContent =
+                    currentWord.substring(0, characterIndex + 1);
+
+                characterIndex++;
+
+                if (characterIndex === currentWord.length) {
+
+                    deleting = true;
+
+                    setTimeout(
+                        typeAnimation,
+                        pauseAfterTyping
+                    );
+
+                    return;
+                }
+
+            } else {
+
+                typingElement.textContent =
+                    currentWord.substring(0, characterIndex - 1);
+
+                characterIndex--;
+
+                if (characterIndex === 0) {
+
+                    deleting = false;
+
+                    wordIndex =
+                        (wordIndex + 1) % words.length;
+
+                    setTimeout(
+                        typeAnimation,
+                        pauseAfterDeleting
+                    );
+
+                    return;
+                }
+            }
+
+            setTimeout(
+                typeAnimation,
+                deleting ? deletingSpeed : typingSpeed
+            );
+        }
+
+
+        typeAnimation();
+
+    </script>
+
+</body>
+
+</html>

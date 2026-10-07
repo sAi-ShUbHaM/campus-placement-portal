@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Job Candidates - Campus Placement Portal</title>
+
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}"> 
+
+    <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+
+
+</head>
+
+<body>
+
+<div class="page-container">
+
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+<header class="dashboard-header">
+
+    <div>
+        <h1>Campus<span class="brand-dot">.</span></h1>
+        <p>Recruiter Portal</p>
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            type="button"
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Switch theme"
+            title="Switch theme"
+        >
+            <span class="theme-icon" aria-hidden="true">☾</span>
+        </button>
+
+        <a href="{{ url_for('auth.logout') }}">
+            <button>Logout</button>
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ========================= -->
+<!-- JOB HEADER -->
+<!-- ========================= -->
+
+<main class="candidate-management-page">
+
+    <div class="candidate-page-heading">
+
+        <span class="page-kicker">
+            CANDIDATE MANAGEMENT
+        </span>
+
+        <h2>
+            {{ job["title"] }}
+        </h2>
+
+        {% if job["description"] %}
+
+        <p>
+            {{ job["description"] }}
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- JOB REQUIREMENTS -->
+    <!-- ========================= -->
+
+    <div class="candidate-job-summary">
+
+        <div>
+
+            <span>
+                MINIMUM CGPA
+            </span>
+
+            <strong>
+                {{ job["minimum_cgpa"] }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                DEPARTMENTS
+            </span>
+
+            <strong>
+                {{ job["allowed_departments"] }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                GRADUATION
+            </span>
+
+            <strong>
+                {{ job["graduation_year"] }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                APPLICANTS
+            </span>
+
+            <strong>
+                {{ applications|length }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- APPLICANTS -->
+    <!-- ========================= -->
+
+    <section class="candidate-section">
+
+        <div class="candidate-section-heading">
+
+            <div>
+
+                <span class="page-kicker">
+                    APPLICATIONS
+                </span>
+
+                <h3>
+                    Applicants
+                </h3>
+
+                {% if applications %}
+
+                <p>
+                    Review candidates and update their
+                    application status.
+                </p>
+
+                {% else %}
+
+                <p>
+                    No applications have been received yet.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        {% if applications %}
+
+
+        <!-- ========================= -->
+        <!-- BATCH UPDATE -->
+        <!-- ========================= -->
+
+        <div class="batch-update-card">
+
+            <div class="batch-update-heading">
+
+                <div>
+
+                    <span class="page-kicker">
+                        BULK ACTION
+                    </span>
+
+                    <h3>
+                        Update multiple applicants
+                    </h3>
+
+                    <p>
+                        Select applicants below and apply
+                        the same status to all of them.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('recruiter.batch_update_application_status') }}"
+            >
+
+                <div class="batch-update-controls">
+
+                    <div class="batch-status-field">
+
+                        <label for="batch-status">
+                            New Status
+                        </label>
+
+                        <select
+                            id="batch-status"
+                            name="status"
+                        >
+
+                            <option value="APPLIED">
+                                APPLIED
+                            </option>
+
+                            <option value="SHORTLISTED">
+                                SHORTLISTED
+                            </option>
+
+                            <option value="INTERVIEW">
+                                INTERVIEW
+                            </option>
+
+                            <option value="SELECTED">
+                                SELECTED
+                            </option>
+
+                            <option value="REJECTED">
+                                REJECTED
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button type="submit">
+                        Update Selected
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+
+                <div class="applicant-selection-header">
+
+                    <span>
+                        SELECT APPLICANTS
+                    </span>
+
+                    <span>
+                        {{ applications|length }} total
+                    </span>
+
+                </div>
+
+
+                <div class="applicant-selection-grid">
+
+                    {% for application in applications %}
+
+                    <label class="candidate-checkbox">
+
+                        <input
+                            type="checkbox"
+                            name="application_ids"
+                            value="{{ application['application_id'] }}"
+                        >
+
+                        <span class="candidate-checkbox-mark"></span>
+
+                        <span class="candidate-checkbox-content">
+
+                            <strong>
+                                {{ application["name"] }}
+                            </strong>
+
+                            <small>
+                                {{ application["branch"] }}
+                                ·
+                                {{ application["cgpa"] }} CGPA
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                    {% endfor %}
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- CANDIDATE CARDS -->
+        <!-- ========================= -->
+
+        <div class="candidate-cards">
+
+            {% for application in applications %}
+
+            <article class="modern-candidate-card">
+
+                <!-- Candidate header -->
+
+                <div class="modern-candidate-header">
+
+                    <div class="candidate-identity">
+
+                        <div class="candidate-avatar">
+                            {{ application["name"][0]|upper }}
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                {{ application["name"] }}
+                            </h3>
+
+                            <span>
+                                {{ application["email"] }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="candidate-status
+                        {% if application['status'] == 'SELECTED' %}
+                            candidate-status-selected
+                        {% elif application['status'] == 'REJECTED' %}
+                            candidate-status-rejected
+                        {% elif application['status'] == 'SHORTLISTED' %}
+                            candidate-status-shortlisted
+                        {% elif application['status'] == 'INTERVIEW' %}
+                            candidate-status-interview
+                        {% else %}
+                            candidate-status-applied
+                        {% endif %}
+                    ">
+                        {{ application["status"] }}
+                    </span>
+
+                </div>
+
+
+                <!-- Candidate details -->
+
+                <div class="candidate-data-grid">
+
+                    <div>
+
+                        <span>
+                            PHONE
+                        </span>
+
+                        <strong>
+                            {{ application["phone"] }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            BRANCH
+                        </span>
+
+                        <strong>
+                            {{ application["branch"] }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            CGPA
+                        </span>
+
+                        <strong>
+                            {{ application["cgpa"] }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            GRADUATION
+                        </span>
+
+                        <strong>
+                            {{ application["graduation_year"] }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            RESUME
+                        </span>
+
+                        {% if application["resume_link"] %}
+
+                        <a
+                            href="{{ application['resume_link'] }}"
+                            target="_blank"
+                        >
+                            View Resume ↗
+                        </a>
+
+                        {% else %}
+
+                        <strong class="muted-value">
+                            Not provided
+                        </strong>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            APPLIED ON
+                        </span>
+
+                        <strong class="candidate-date">
+                            {{ application["applied_at"] }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Individual status -->
+
+                <div class="individual-status-section">
+
+                    <div>
+
+                        <span class="page-kicker">
+                            APPLICATION STATUS
+                        </span>
+
+                        <h4>
+                            Update candidate
+                        </h4>
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('recruiter.update_application_status', application_id=application['application_id']) }}"
+                        class="individual-status-form"
+                    >
+
+                        <select name="status">
+
+                            <option value="APPLIED"
+                                {% if application["status"] == "APPLIED" %}selected{% endif %}>
+                                APPLIED
+                            </option>
+
+                            <option value="SHORTLISTED"
+                                {% if application["status"] == "SHORTLISTED" %}selected{% endif %}>
+                                SHORTLISTED
+                            </option>
+
+                            <option value="INTERVIEW"
+                                {% if application["status"] == "INTERVIEW" %}selected{% endif %}>
+                                INTERVIEW
+                            </option>
+
+                            <option value="SELECTED"
+                                {% if application["status"] == "SELECTED" %}selected{% endif %}>
+                                SELECTED
+                            </option>
+
+                            <option value="REJECTED"
+                                {% if application["status"] == "REJECTED" %}selected{% endif %}>
+                                REJECTED
+                            </option>
+
+                        </select>
+
+                        <button type="submit">
+                            Update Status
+                            <span>→</span>
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <!-- ========================= -->
+        <!-- EMPTY STATE -->
+        <!-- ========================= -->
+
+        <div class="candidate-empty-state">
+
+            <span class="empty-icon">
+                —
+            </span>
+
+            <span class="page-kicker">
+                NO APPLICATIONS
+            </span>
+
+            <h3>
+                No students have applied yet.
+            </h3>
+
+            <p>
+                Applications will appear here once students
+                apply for this opportunity.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- NAVIGATION -->
+    <!-- ========================= -->
+
+    <div class="candidate-page-actions">
+
+        <a href="{{ url_for('recruiter.recruiter_dashboard') }}">
+            <button class="outline-button">
+                ← Back to Dashboard
+            </button>
+        </a>
+
+    </div>
+
+</main>
+
+
+<footer class="dashboard-footer">
+    Campus Placement Portal · Recruiter
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

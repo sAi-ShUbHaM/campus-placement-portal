@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Admin Dashboard - Campus Placement Portal</title>
+
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+
+
+</head>
+
+<body>
+
+<div class="page-container">
+
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+<header class="dashboard-header">
+
+    <div>
+        <h1>Campus<span class="brand-dot">.</span></h1>
+        <p>Placement Cell Administration</p>
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            type="button"
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Switch theme"
+            title="Switch theme"
+        >
+            <span class="theme-icon" aria-hidden="true">☾</span>
+        </button>
+
+        <a href="{{ url_for('auth.logout') }}">
+            <button>Logout</button>
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ========================= -->
+<!-- PAGE INTRO -->
+<!-- ========================= -->
+
+<main class="admin-dashboard-page">
+
+    <section class="admin-hero">
+
+        <div>
+
+            <span class="page-kicker">
+                PLACEMENT CELL
+            </span>
+
+            <h2>
+                Administration,
+                <br>
+                without the noise.
+            </h2>
+
+            <p>
+                Review company registrations and job postings
+                before they enter the student placement ecosystem.
+            </p>
+
+        </div>
+
+        <div class="admin-hero-status">
+
+            <span class="admin-live-dot"></span>
+
+            <div>
+                <strong>
+                    ADMIN CONTROL
+                </strong>
+
+                <span>
+                    Approval system active
+                </span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- OVERVIEW -->
+    <!-- ========================= -->
+
+    <section class="admin-overview">
+
+        <div class="admin-overview-item">
+
+            <span>
+                COMPANY REVIEWS
+            </span>
+
+            <strong>
+                {{ companies|length }}
+            </strong>
+
+            <small>
+                Pending
+            </small>
+
+        </div>
+
+
+        <div class="admin-overview-item">
+
+            <span>
+                JOB REVIEWS
+            </span>
+
+            <strong>
+                {{ jobs|length }}
+            </strong>
+
+            <small>
+                Pending
+            </small>
+
+        </div>
+
+
+        <div class="admin-overview-item">
+
+            <span>
+                WORKFLOW
+            </span>
+
+            <strong>
+                ACTIVE
+            </strong>
+
+            <small>
+                Placement approval
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- COMPANIES -->
+    <!-- ========================= -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-heading">
+
+            <div>
+
+                <span class="page-kicker">
+                    01 · COMPANY REVIEW
+                </span>
+
+                <h3>
+                    Pending Companies
+                </h3>
+
+                <p>
+                    Review company registrations before
+                    recruiters can publish opportunities.
+                </p>
+
+            </div>
+
+            {% if companies %}
+
+            <span class="admin-count-badge">
+                {{ companies|length }} PENDING
+            </span>
+
+            {% endif %}
+
+        </div>
+
+
+        {% if companies %}
+
+        <div class="admin-review-grid">
+
+            {% for company in companies %}
+
+            <article class="admin-review-card">
+
+                <div class="admin-review-top">
+
+                    <div class="admin-entity">
+
+                        <div class="admin-entity-icon">
+                            {{ company["company_name"][0]|upper }}
+                        </div>
+
+                        <div>
+
+                            <span class="admin-entity-type">
+                                COMPANY
+                            </span>
+
+                            <h4>
+                                {{ company["company_name"] }}
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                    <span class="admin-pending-status">
+                        {{ company["approval_status"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="admin-review-content">
+
+                    <span class="admin-field-label">
+                        DESCRIPTION
+                    </span>
+
+                    {% if company["description"] %}
+
+                    <p>
+                        {{ company["description"] }}
+                    </p>
+
+                    {% else %}
+
+                    <p class="admin-muted-text">
+                        No company description provided.
+                    </p>
+
+                    {% endif %}
+
+
+                    {% if company["website"] %}
+
+                    <div class="admin-website">
+
+                        <span class="admin-field-label">
+                            WEBSITE
+                        </span>
+
+                        <a
+                            href="{{ company['website'] }}"
+                            target="_blank"
+                        >
+                            Visit Official Website ↗
+                        </a>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="admin-review-actions">
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('admin.approve_company', company_id=company['id']) }}"
+                    >
+
+                        <button type="submit">
+                            ✓ Approve Company
+                        </button>
+
+                    </form>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('admin.reject_company', company_id=company['id']) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="danger-button"
+                        >
+                            ✕ Reject
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="admin-empty-state">
+
+            <div class="admin-empty-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <span class="page-kicker">
+                    ALL CLEAR
+                </span>
+
+                <h4>
+                    No pending companies.
+                </h4>
+
+                <p>
+                    There are currently no company registrations
+                    waiting for review.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- JOBS -->
+    <!-- ========================= -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-heading">
+
+            <div>
+
+                <span class="page-kicker">
+                    02 · OPPORTUNITY REVIEW
+                </span>
+
+                <h3>
+                    Pending Job Postings
+                </h3>
+
+                <p>
+                    Verify job requirements before opportunities
+                    become visible to eligible students.
+                </p>
+
+            </div>
+
+            {% if jobs %}
+
+            <span class="admin-count-badge">
+                {{ jobs|length }} PENDING
+            </span>
+
+            {% endif %}
+
+        </div>
+
+
+        {% if jobs %}
+
+        <div class="admin-review-grid">
+
+            {% for job in jobs %}
+
+            <article class="admin-review-card">
+
+                <div class="admin-review-top">
+
+                    <div class="admin-entity">
+
+                        <div class="admin-entity-icon">
+                            ↗
+                        </div>
+
+                        <div>
+
+                            <span class="admin-entity-type">
+                                JOB POSTING
+                            </span>
+
+                            <h4>
+                                {{ job["title"] }}
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                    <span class="admin-pending-status">
+                        {{ job["approval_status"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="admin-company-reference">
+
+                    <span>
+                        COMPANY
+                    </span>
+
+                    <strong>
+                        {{ job["company_name"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-review-content">
+
+                    <span class="admin-field-label">
+                        DESCRIPTION
+                    </span>
+
+                    {% if job["description"] %}
+
+                    <p>
+                        {{ job["description"] }}
+                    </p>
+
+                    {% else %}
+
+                    <p class="admin-muted-text">
+                        No job description provided.
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="admin-job-criteria">
+
+                    <div>
+
+                        <span>
+                            MIN CGPA
+                        </span>
+
+                        <strong>
+                            {{ job["minimum_cgpa"] }}
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            DEPARTMENTS
+                        </span>
+
+                        <strong>
+                            {{ job["allowed_departments"] }}
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            GRADUATION
+                        </span>
+
+                        <strong>
+                            {{ job["graduation_year"] }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-review-actions">
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('admin.approve_job', job_id=job['id']) }}"
+                    >
+
+                        <button type="submit">
+                            ✓ Approve Job
+                        </button>
+
+                    </form>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('admin.reject_job', job_id=job['id']) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="danger-button"
+                        >
+                            ✕ Reject Job
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="admin-empty-state">
+
+            <div class="admin-empty-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <span class="page-kicker">
+                    ALL CLEAR
+                </span>
+
+                <h4>
+                    No pending job postings.
+                </h4>
+
+                <p>
+                    There are currently no job postings
+                    waiting for approval.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- WORKFLOW NOTE -->
+    <!-- ========================= -->
+
+    <section class="admin-workflow-note">
+
+        <div class="admin-workflow-number">
+            03
+        </div>
+
+        <div>
+
+            <span class="page-kicker">
+                APPROVAL WORKFLOW
+            </span>
+
+            <h3>
+                Review before publish.
+            </h3>
+
+            <p>
+                Approved companies can publish opportunities.
+                Approved jobs become visible to students only
+                when their eligibility criteria are satisfied.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <div class="candidate-page-actions">
+
+        <a href="{{ url_for('auth.logout') }}">
+            <button class="outline-button">
+                Logout from Admin
+            </button>
+        </a>
+
+    </div>
+
+</main>
+
+
+<footer class="dashboard-footer">
+    Campus Placement Portal · Placement Cell
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

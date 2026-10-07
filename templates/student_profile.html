@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Student Profile - Campus Placement Portal</title>
+
+
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+<script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+
+
+</head>
+
+<body>
+
+<div class="page-container">
+
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+<header class="dashboard-header">
+
+    <div>
+        <h1>Campus<span class="brand-dot">.</span></h1>
+        <p>Student Portal</p>
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            type="button"
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Switch theme"
+            title="Switch theme"
+        >
+            <span class="theme-icon" aria-hidden="true">☾</span>
+        </button>
+
+        <a href="{{ url_for('auth.logout') }}">
+            <button>Logout</button>
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ========================= -->
+<!-- PROFILE PAGE -->
+<!-- ========================= -->
+
+<main class="student-profile-page">
+
+    <div class="student-profile-heading">
+
+        <span class="page-kicker">
+            STUDENT PORTAL
+        </span>
+
+        <h2>
+            Build your profile.
+        </h2>
+
+        <p>
+            Keep your academic information updated so the portal
+            can determine which placement opportunities you are
+            eligible for.
+        </p>
+
+    </div>
+
+
+    <div class="student-profile-layout">
+
+        <!-- ========================= -->
+        <!-- INFORMATION PANEL -->
+        <!-- ========================= -->
+
+        <aside class="student-profile-info">
+
+            <span class="page-kicker">
+                PROFILE GUIDE
+            </span>
+
+            <h3>
+                One profile.
+                <br>
+                Better opportunities.
+            </h3>
+
+            <p>
+                Your profile information is used to match you
+                with job eligibility requirements.
+            </p>
+
+
+            <div class="profile-guide-list">
+
+                <div class="profile-guide-item">
+
+                    <span>
+                        01
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Academic details
+                        </strong>
+
+                        <p>
+                            Your branch, CGPA, and graduation
+                            year determine eligibility.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-guide-item">
+
+                    <span>
+                        02
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Resume
+                        </strong>
+
+                        <p>
+                            Add a link to your latest resume
+                            for recruiters to review.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-guide-item">
+
+                    <span>
+                        03
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Stay updated
+                        </strong>
+
+                        <p>
+                            Keep your information accurate
+                            throughout the placement cycle.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ========================= -->
+        <!-- PROFILE FORM -->
+        <!-- ========================= -->
+
+        <section class="student-profile-form-card">
+
+            <div class="student-profile-form-header">
+
+                <div>
+
+                    <span class="page-kicker">
+                        PROFILE DETAILS
+                    </span>
+
+                    <h3>
+                        {% if student %}
+                            Update your profile
+                        {% else %}
+                            Complete your profile
+                        {% endif %}
+                    </h3>
+
+                </div>
+
+                {% if student %}
+
+                <span class="profile-edit-badge">
+                    EDITING
+                </span>
+
+                {% else %}
+
+                <span class="profile-edit-badge">
+                    NEW
+                </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('student.student_profile') }}"
+                class="student-profile-form"
+            >
+
+                <!-- BRANCH -->
+
+                <div class="student-profile-field">
+
+                    <label for="branch">
+                        Branch / Department
+                    </label>
+
+                    <span class="field-hint">
+                        Enter your current academic department
+                    </span>
+
+                    <input
+                        type="text"
+                        id="branch"
+                        name="branch"
+                        value="{{ student['branch'] if student else '' }}"
+                        placeholder="e.g. EEE"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CGPA -->
+
+                <div class="student-profile-field">
+
+                    <label for="cgpa">
+                        CGPA
+                    </label>
+
+                    <span class="field-hint">
+                        Your current cumulative grade point average
+                    </span>
+
+                    <input
+                        type="number"
+                        id="cgpa"
+                        name="cgpa"
+                        step="0.01"
+                        min="0"
+                        max="10"
+                        value="{{ student['cgpa'] if student else '' }}"
+                        placeholder="e.g. 8.50"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- GRADUATION -->
+
+                <div class="student-profile-field">
+
+                    <label for="graduation_year">
+                        Graduation Year
+                    </label>
+
+                    <span class="field-hint">
+                        Expected year of graduation
+                    </span>
+
+                    <input
+                        type="number"
+                        id="graduation_year"
+                        name="graduation_year"
+                        value="{{ student['graduation_year'] if student else '' }}"
+                        placeholder="e.g. 2030"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- RESUME -->
+
+                <div class="student-profile-field">
+
+                    <label for="resume_link">
+                        Resume Link
+                    </label>
+
+                    <span class="field-hint">
+                        Paste a shareable link to your latest resume
+                    </span>
+
+                    <input
+                        type="url"
+                        id="resume_link"
+                        name="resume_link"
+                        value="{{ student['resume_link'] if student else '' }}"
+                        placeholder="https://drive.google.com/..."
+                    >
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="student-profile-actions">
+
+                    <a
+                        href="{{ url_for('student.student_dashboard') }}"
+                        class="form-cancel-link"
+                    >
+                        Cancel
+                    </a>
+
+                    <button type="submit">
+
+                        {% if student %}
+                            Save Changes
+                        {% else %}
+                            Save Profile
+                        {% endif %}
+
+                        <span>→</span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <!-- NOTE -->
+
+            <div class="student-profile-note">
+
+                <span>ⓘ</span>
+
+                <p>
+                    Your branch, CGPA, and graduation year are used
+                    by the portal's eligibility system when you
+                    apply for opportunities.
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<footer class="dashboard-footer">
+    Campus Placement Portal · Student
+</footer>
+
+
+</div>
+
+</body>
+
+</html>

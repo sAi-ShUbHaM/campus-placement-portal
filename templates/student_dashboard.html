@@ -1,0 +1,513 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Dashboard - Campus Placement Portal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+</head>
+
+<body>
+
+    {% if message == "already_applied" %}
+
+    <div class="dashboard-toast" id="dashboard-toast">
+
+        <div class="toast-icon">
+            !
+        </div>
+
+        <div class="toast-content">
+
+            <strong>
+                Already Applied
+            </strong>
+
+            <span>
+                You have already applied for this job.
+            </span>
+
+        </div>
+
+        <button
+            type="button"
+            class="toast-close"
+            onclick="closeToast()"
+            aria-label="Close notification"
+        >
+            ×
+        </button>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <div class="page-container">
+
+        <!-- HEADER -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>Campus<span class="brand-dot">.</span></h1>
+                <p>Student Dashboard</p>
+            </div>
+
+            <div class="header-actions">
+
+                <button
+                    type="button"
+                    class="theme-toggle"
+                    data-theme-toggle
+                    aria-label="Switch theme"
+                    title="Switch theme"
+                >
+                    <span class="theme-icon" aria-hidden="true">☾</span>
+                </button>
+
+                <a href="{{ url_for('auth.logout') }}">
+                    <button>Logout</button>
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- WELCOME -->
+        <section class="student-welcome">
+
+            <div>
+
+                <span class="page-kicker">
+                    STUDENT PORTAL
+                </span>
+
+                <h2>
+                    Welcome back,
+                    {{ user["name"] }}.
+                </h2>
+
+                <p>
+                    Find opportunities that match your profile
+                    and track your applications.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROFILE -->
+        <section class="dashboard-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="page-kicker">
+                        PROFILE
+                    </span>
+
+                    <h2>Your profile</h2>
+                </div>
+
+                <a href="{{ url_for('student.student_profile') }}">
+                    <button class="outline-button">
+                        Edit Profile
+                    </button>
+                </a>
+
+            </div>
+
+
+            {% if student %}
+
+            <div class="student-profile-card">
+
+                <div class="profile-stat">
+
+                    <span>BRANCH</span>
+
+                    <strong>
+                        {{ student["branch"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <span>CGPA</span>
+
+                    <strong>
+                        {{ student["cgpa"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <span>GRADUATION</span>
+
+                    <strong>
+                        {{ student["graduation_year"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <span>RESUME</span>
+
+                    {% if student["resume_link"] %}
+
+                    <a
+                        href="{{ student['resume_link'] }}"
+                        target="_blank"
+                    >
+                        View Resume ↗
+                    </a>
+
+                    {% else %}
+
+                    <strong class="muted-value">
+                        Not added
+                    </strong>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="card profile-warning">
+
+                <div>
+
+                    <span class="page-kicker">
+                        ACTION REQUIRED
+                    </span>
+
+                    <h3>
+                        Complete your student profile
+                    </h3>
+
+                    <p>
+                        Add your branch, CGPA, graduation year,
+                        and resume before applying for jobs.
+                    </p>
+
+                </div>
+
+                <a href="{{ url_for('student.student_profile') }}">
+                    <button>
+                        Complete Profile →
+                    </button>
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- JOBS -->
+        <section class="dashboard-section">
+
+            <div class="section-heading stacked-heading">
+
+                <div>
+
+                    <span class="page-kicker">
+                        OPPORTUNITIES
+                    </span>
+
+                    <h2>Available jobs</h2>
+
+                    <p>
+                        Approved opportunities based on your placement cycle.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if jobs %}
+
+            <div class="modern-job-grid">
+
+                {% for job in jobs %}
+
+                <article class="modern-job-card">
+
+                    <div class="job-card-top">
+
+                        <div>
+
+                            <span class="job-company">
+                                {{ job["company_name"] }}
+                            </span>
+
+                            <h3>
+                                {{ job["title"] }}
+                            </h3>
+
+                        </div>
+
+                        {% if job["eligible"] %}
+
+                        <span class="eligibility-badge eligible">
+                            ELIGIBLE
+                        </span>
+
+                        {% else %}
+
+                        <span class="eligibility-badge ineligible">
+                            NOT ELIGIBLE
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if job["description"] %}
+
+                    <p class="modern-job-description">
+                        {{ job["description"] }}
+                    </p>
+
+                    {% endif %}
+
+
+                    <div class="job-requirements">
+
+                        <div>
+                            <span>MIN CGPA</span>
+                            <strong>
+                                {{ job["minimum_cgpa"] }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>DEPARTMENTS</span>
+                            <strong>
+                                {{ job["allowed_departments"] }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>GRADUATION</span>
+                            <strong>
+                                {{ job["graduation_year"] }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    {% if job["eligible"] %}
+
+                    <div class="job-card-action">
+
+                        <form
+                            method="POST"
+                            action="{{ url_for('student.apply_job', job_id=job['id']) }}"
+                        >
+
+                            <button class="apply-button">
+                                Apply Now
+                                <span>→</span>
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="ineligible-message">
+
+                        <strong>
+                            Application unavailable
+                        </strong>
+
+                        <span>
+                            {{ job["eligibility_reason"] }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+                </article>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="card empty-state">
+
+                <span class="empty-icon">—</span>
+
+                <h3>
+                    No opportunities yet
+                </h3>
+
+                <p>
+                    Approved job postings will appear here.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- APPLICATIONS -->
+        <section class="dashboard-section">
+
+            <div class="section-heading stacked-heading">
+
+                <div>
+
+                    <span class="page-kicker">
+                        APPLICATIONS
+                    </span>
+
+                    <h2>Application tracking</h2>
+
+                    <p>
+                        Keep track of every opportunity you've applied to.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if applications %}
+
+            <div class="application-table">
+
+                <div class="application-table-header">
+
+                    <span>POSITION</span>
+                    <span>COMPANY</span>
+                    <span>STATUS</span>
+                    <span>APPLIED</span>
+
+                </div>
+
+
+                {% for application in applications %}
+
+                <div class="application-row">
+
+                    <div>
+                        <strong>
+                            {{ application["title"] }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        {{ application["company_name"] }}
+                    </div>
+
+                    <div>
+                        <span class="application-status">
+                            {{ application["status"] }}
+                        </span>
+                    </div>
+
+                    <div class="application-date-modern">
+                        {{ application["applied_at"] }}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="card empty-state">
+
+                <span class="empty-icon">—</span>
+
+                <h3>
+                    No applications yet
+                </h3>
+
+                <p>
+                    Your submitted applications will appear here.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <footer class="dashboard-footer">
+            Campus Placement Portal
+        </footer>
+
+    </div>
+
+
+
+    <script>
+        function closeToast() {
+            const toast = document.getElementById("dashboard-toast");
+
+            if (toast) {
+                toast.remove();
+            }
+        }
+
+
+        const dashboardToast =
+            document.getElementById("dashboard-toast");
+
+
+        if (dashboardToast) {
+
+            setTimeout(() => {
+
+                dashboardToast.style.opacity = "0";
+                dashboardToast.style.transform = "translateY(-12px)";
+                dashboardToast.style.transition =
+                    "opacity 0.25s ease, transform 0.25s ease";
+
+
+                setTimeout(() => {
+                    dashboardToast.remove();
+                }, 250);
+
+            }, 4000);
+
+        }
+    </script>
+
+
+
+</body>
+
+</html>
